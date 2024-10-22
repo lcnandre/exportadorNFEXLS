@@ -1,6 +1,6 @@
 import { writeFileSync, appendFileSync, readdirSync, readFileSync } from 'fs';
 import { parseString } from 'xml2js';
-import json2csv from 'json2csv';
+import { Parser } from 'json2csv';
 
 const CAMINHO = 'notas';
 const ARQUIVO_SAIDA = 'saida.csv';
@@ -34,8 +34,8 @@ function converterDados(nota) {
     };
 
     for (let i = 0; i < Object.keys(PRODUTOS).length; i++) {
-      const valor = '0';
-      const quantidade = '0';
+      let valor = '0';
+      let quantidade = '0';
 
       if (PRODUTOS.hasOwnProperty(Object.keys(PRODUTOS)[i])) {
         const codigoProduto = Object.keys(PRODUTOS)[i];
@@ -73,7 +73,7 @@ function gravarArquivo(conteudo) {
 }
 
 function processarCaminho() {
-  const dadosArquivo = '' + COLUNAS;
+  let dadosArquivo = '' + COLUNAS;
 
   criarArquivo();
   const nomes = readdirSync(CAMINHO);
@@ -93,11 +93,11 @@ function processarCaminho() {
 
 function formatarData(data) {
   data = new Date(data);
-  const dia = data.getDate();
+  let dia = data.getDate();
   if (dia.toString().length == 1) dia = '0' + dia;
-  const mes = data.getMonth() + 1;
+  let mes = data.getMonth() + 1;
   if (mes.toString().length == 1) mes = '0' + mes;
-  const ano = data.getFullYear();
+  let ano = data.getFullYear();
   return dia + '/' + mes + '/' + ano;
 };
 
@@ -111,8 +111,8 @@ function converterArquivo(conteudo, callBack) {
       }
       const convertido = converterDados(resultado);
       if (convertido) {
-        const colunas = COLUNAS.split(',');
-        const csv = json2csv({ data: convertido, fields: colunas });
+        const parser = new Parser();
+        let csv = parser.parse(convertido);
         csv = csv.substring(csv.indexOf('"valor20L"') + 10);
         csv = csv.substring(csv.indexOf('"'));
         callBack(csv);
