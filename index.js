@@ -1,6 +1,5 @@
 import { writeFileSync, appendFileSync, readdirSync, readFileSync } from 'fs';
 import { parseString } from 'xml2js';
-import jsonexport from 'jsonexport';
 import json2csv from 'json2csv';
 
 const CAMINHO = 'notas';
